@@ -1,13 +1,18 @@
 
 package xyz.nasaknights.following;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Implement this with your drivetrain class to be compatible with
  * the "new" HelixFollower
  */
-public interface NKDrive {
+public interface NKDrive extends Subsystem {
+
+    PIDController leftVelocityController = null;
+    static PIDController rightVelocityController = null;
 
     /**
      * @return The maximum speed for your robot in feet per second.
@@ -36,8 +41,18 @@ public interface NKDrive {
     public double getRightEncoderFeet();
 
     /**
-     * A method that will power the left and right sides of the drivetrain
-     * @see {@link DifferentialDrive#tankDrive} (This is your best option!)
+     * A method to encourage you to use a PID loop to make sure the left side
+     * of the drivetrain is moving at the desired velocity. If you do not
+     * implement a PID loop, your results will be wildly inconsistent.
+     * @param velocity The target velocity in feet per second
      */
-    public void tankDrive(double left, double right);
+    public void setLeftVelocityFPS(double velocity);
+
+    /**
+     * A method to encourage you to use a PID loop to make sure the right side
+     * of the drivetrain is moving at the desired velocity. If you do not
+     * implement a PID loop, your results will be wildly inconsistent.
+     * @param velocity The target velocity in feet per second
+     */
+    public void setRightVelocityFPS(double velocity);
 }

@@ -8,8 +8,8 @@ import static xyz.nasaknights.following.NKFollower.getDrivetrain;
 
 public class NKHelixHelper extends HelixFollower {
 
-    private PIDController distanceController = new PIDController(10, 0, 0, 0.001);
-    private PIDController headingController = new PIDController(15, 0, 0, 0.001);
+    protected PIDController distanceController = new PIDController(10, 0, 0, 0.001);
+    protected PIDController headingController = new PIDController(15, 0, 0, 0.001);
 
     private static double m_maxFPS;
 
@@ -77,6 +77,7 @@ public class NKHelixHelper extends HelixFollower {
 
     @Override
     public final void useOutputs(final double left, final double right) {
-        getDrivetrain().tankDrive(left / m_maxFPS, right / m_maxFPS);
+        getDrivetrain().setLeftVelocityFPS(left);
+        getDrivetrain().setRightVelocityFPS(right);
     }
 }
