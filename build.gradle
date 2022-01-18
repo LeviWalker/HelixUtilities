@@ -72,6 +72,7 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
+    implementation 'com.github.jitpack:gradle-simple:1.0'
     implementation 'com.github.Team319:BobTrajectory:v2.1.1'
 
     testImplementation 'junit:junit:4.12'
