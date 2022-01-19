@@ -1,4 +1,4 @@
-package xyz.nasaknights.util.tunable;
+package xyz.nasaknights.tunable;
 
 public interface NKTunableMotorBase extends NKMotorBase {
     public boolean isTuningLocked();

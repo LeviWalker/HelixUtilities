@@ -1,8 +1,6 @@
-package xyz.nasaknights.util;
+package xyz.nasaknights.tunable;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import xyz.nasaknights.util.tunable.Tunable;
-import xyz.nasaknights.util.tunable.TunableRegistry;
 import edu.wpi.first.math.controller.PIDController;
 
 public class TunablePIDController extends PIDController implements Tunable {

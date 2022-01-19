@@ -3,7 +3,8 @@ package xyz.nasaknights.control;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
-import xyz.nasaknights.util.tunable.NKTunableMotorBase;
+import edu.wpi.first.math.MathUtil;
+import xyz.nasaknights.tunable.NKTunableMotorBase;
 
 public class NKVictorSPX extends WPI_VictorSPX implements NKTunableMotorBase {
     
@@ -23,7 +24,7 @@ public class NKVictorSPX extends WPI_VictorSPX implements NKTunableMotorBase {
     public void set(ControlMode mode, double output) {
         if (mode != m_lastMode || output != m_lastOutput) {
             m_lastMode = mode;
-            m_lastOutput = this.m_useOutputRange? Math.max(Math.min(m_maxOutput, output), m_minOutput) : output;
+            m_lastOutput = this.m_useOutputRange? MathUtil.clamp(output, this.m_minOutput, this.m_maxOutput) : output;
             super.set(mode, output);
         }
     }

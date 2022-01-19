@@ -1,9 +1,10 @@
 package xyz.nasaknights.control;
 
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax;
 
-import xyz.nasaknights.util.tunable.NKTunableMotorBase;
+import xyz.nasaknights.tunable.NKTunableMotorBase;
+
+import com.revrobotics.CANSparkMax;
 
 public class NKSparkMax extends CANSparkMax implements NKTunableMotorBase {
 

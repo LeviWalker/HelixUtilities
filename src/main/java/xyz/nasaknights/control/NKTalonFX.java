@@ -3,9 +3,16 @@ package xyz.nasaknights.control;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import xyz.nasaknights.util.tunable.NKTunableMotorBase;
+import edu.wpi.first.math.MathUtil;
+import xyz.nasaknights.tunable.NKTunableMotorBase;
+
+import static xyz.nasaknights.control.NKTalonFX.Math.*;
 
 public class NKTalonFX extends WPI_TalonFX implements NKTunableMotorBase {
+
+    public static final double kMaxFreeSpeedVelocityTicksPer100Milliseconds = 21777;
+    public static final double kMaxFreeSpeedVelocityRPM = 6380;
+    public static final double kTicksPerRotation = 2048;
 
     private ControlMode m_lastMode;
     private double m_lastOutput;
@@ -24,7 +31,7 @@ public class NKTalonFX extends WPI_TalonFX implements NKTunableMotorBase {
     public void set(ControlMode mode, double output) {
         if (mode != m_lastMode || output != m_lastOutput) {
             m_lastMode = mode;
-            m_lastOutput = this.m_useOutputRange? Math.max(Math.min(m_maxOutput, output), m_minOutput) : output;
+            m_lastOutput = this.m_useOutputRange? MathUtil.clamp(output, this.m_minOutput, this.m_maxOutput) : output;
             super.set(mode, output);
         }
     }
@@ -33,16 +40,43 @@ public class NKTalonFX extends WPI_TalonFX implements NKTunableMotorBase {
         this.set(ControlMode.PercentOutput, power);
     }
 
+    public void setVelocity(double ticksPer100Milliseconds) {
+        this.set(
+            ControlMode.Velocity,
+            MathUtil.clamp(
+                ticksPer100Milliseconds,
+                -NKTalonFX.kMaxFreeSpeedVelocityTicksPer100Milliseconds,
+                NKTalonFX.kMaxFreeSpeedVelocityTicksPer100Milliseconds
+            )
+        );
+    }
+
+    public void setVeloityRPM(double rpm) {
+        this.setVelocity(rpmToTicksPer100Milliseconds(rpm));
+    }
+
     public double getPosition() {
         return super.getSensorCollection().getIntegratedSensorPosition();
+    }
+
+    public double getPositionRotations() {
+        return this.getPosition() / NKTalonFX.kTicksPerRotation;
     }
 
     public double getAbsolutePosition() {
         return super.getSensorCollection().getIntegratedSensorAbsolutePosition();
     }
 
+    public double getAbsolutePositionRotations() {
+        return this.getAbsolutePosition() / NKTalonFX.kTicksPerRotation;
+    }
+
     public double getVelocity() {
         return super.getSensorCollection().getIntegratedSensorVelocity();
+    }
+
+    public double getVelocityRPM() {
+        return ticksPer100MillisecondsToRPM(this.getVelocity());
     }
 
     public void resetPosition() {
@@ -107,5 +141,47 @@ public class NKTalonFX extends WPI_TalonFX implements NKTunableMotorBase {
     @Override
     public void resetOutputRange() {
         this.m_useOutputRange = false;
+    }
+
+    public static class Math {
+
+        /**
+         * A rough estimate of the percent output
+         * for a certain velocity in ticks per
+         * 100 ms (default for ControlMode.Velocity)
+         * @param ticksPer100Milliseconds velocity
+         * @return the rough estimate
+         */
+        public static double ticksPer100MillisecondsToPercent(double ticksPer100Milliseconds) {
+            return ticksPer100Milliseconds / NKTalonFX.kMaxFreeSpeedVelocityTicksPer100Milliseconds;
+        }
+
+        /**
+         * A rough estimate of the percent output
+         * for a certain velocity in RPM
+         * @param ticksPer100Milliseconds velocity
+         * @return the rough estimate
+         */
+        public static double rpmToPercent(double rpm) {
+            return rpm / NKTalonFX.kMaxFreeSpeedVelocityRPM;
+        }
+
+        /**
+         * Converts RPM to ticks per 100 ms.
+         * @param rpm
+         * @return ticks per 100 ms
+         */
+        public static double rpmToTicksPer100Milliseconds(double rpm) {
+            return rpm * 3.41333333333;
+        }
+
+        /**
+         * Converts ticks per 100 ms to RPM.
+         * @param ticksPer100Milliseconds
+         * @return RPM
+         */
+        public static double ticksPer100MillisecondsToRPM(double ticksPer100Milliseconds) {
+            return ticksPer100Milliseconds / 3.41333333333;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package xyz.nasaknights.util.tunable;
+package xyz.nasaknights.tunable;
 
 import java.util.ArrayList;
 

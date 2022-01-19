@@ -1,9 +1,7 @@
-package xyz.nasaknights.util;
+package xyz.nasaknights.tunable;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import xyz.nasaknights.util.tunable.Tunable;
-import xyz.nasaknights.util.tunable.TunableRegistry;
 
 /**
  * <p>This is a implementation of a feedforward contoller that is designed

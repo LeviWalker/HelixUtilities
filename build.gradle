@@ -1,7 +1,7 @@
-import edu.wpi.first.gradlerio.deploy.roborio.RoboRIO
 
 plugins {
     id "java"
+    id "maven-publish"
     id "edu.wpi.first.GradleRIO" version "2022.1.1"
 }
 
@@ -76,6 +76,18 @@ dependencies {
     implementation 'com.github.Team319:BobTrajectory:v2.1.1'
 
     testImplementation 'junit:junit:4.12'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.github.NASAKnights'
+            artifactId = 'NKUtil'
+            version = 'v2022.1.3' // change this then run ./gradlew build publishToMavenLocal
+
+            from components.java
+        }
+    }
 }
 
 // Simulation configuration (e.g. environment variables).

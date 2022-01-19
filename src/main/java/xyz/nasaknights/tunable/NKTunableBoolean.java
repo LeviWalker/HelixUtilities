@@ -1,35 +1,35 @@
-package xyz.nasaknights.util.tunable;
+package xyz.nasaknights.tunable;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public abstract class NKTunableNumber implements Tunable {
+public abstract class NKTunableBoolean implements Tunable {
 
     /**
      * Standard default return value for all instances
      * of the {@link NKTunableNumber} class.
      */
-    protected static final double kDefaultValue = 0;
+    protected static final boolean kDefaultValue = false;
     protected static boolean kDefaultEnable = false;
     protected String m_name;
-    protected double m_value, m_defaultValue;
+    protected boolean m_value, m_defaultValue;
     protected boolean m_enabled;
 
-    public NKTunableNumber(String name, double defaultValue) {
+    public NKTunableBoolean(String name, boolean defaultValue) {
         this.m_name = name;
         this.m_defaultValue = defaultValue;
         TunableRegistry.register(this);
     }
 
-    public NKTunableNumber(String name) {
+    public NKTunableBoolean(String name) {
         this(name, kDefaultValue);
     }
 
-    protected abstract void updateValue(double newValue);
+    protected abstract void updateValue(boolean newValue);
 
     @Override
     public void tune() {
-        this.updateValue(SmartDashboard.getNumber(this.m_name, this.m_defaultValue));
-        SmartDashboard.putNumber(this.m_name, this.m_value);
+        this.updateValue(SmartDashboard.getBoolean(this.m_name, this.m_defaultValue));
+        SmartDashboard.putBoolean(this.m_name, this.m_value);
     }
 
     @Override
@@ -52,7 +52,7 @@ public abstract class NKTunableNumber implements Tunable {
         return m_name;
     }
 
-    public double getValue() {
+    public boolean getValue() {
         return m_value;
     }
 }
