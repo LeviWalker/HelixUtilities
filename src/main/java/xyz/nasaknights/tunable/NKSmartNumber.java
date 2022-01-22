@@ -1,28 +1,44 @@
 package xyz.nasaknights.tunable;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class NKSmartNumber extends NKTunableNumber {
 
-    private Consumer<Double> consumer;
+    private Supplier<Double> getter;
+    private Consumer<Double> setter;
 
-    public NKSmartNumber(String name, Consumer<Double> valueConsumer, double defaultValue) {
-        super(name, defaultValue); // need both a name and default return value
-        // below how we are going to use new values once they come in
-        this.consumer = valueConsumer;
+    public NKSmartNumber(String name, Supplier<Double> getter, Consumer<Double> setter, double defaultValue) {
+        super(name, defaultValue);
+        this.getter = getter;
+        this.setter = setter;
     }
 
-    public NKSmartNumber(String name, Consumer<Double> valueConsumer) {
-        // run through the default constructor,
-        // using kDefaultValue from base class
-        this(name, valueConsumer, kDefaultValue); 
+    public NKSmartNumber(String name, Supplier<Double> getter, Consumer<Double> setter) {
+        this(name, getter, setter, kDefaultValue);
+    }
+
+    public NKSmartNumber(String name, Supplier<Double> getter, double defaultValue) {
+        this(name, getter, null, defaultValue);
+    }
+
+    public NKSmartNumber(String name, Consumer<Double> setter, double defaultValue) {
+        this(name, null, setter, defaultValue);
+    }
+
+    public NKSmartNumber(String name, Supplier<Double> getter) {
+        this(name, getter, null);
+    }
+
+    public NKSmartNumber(String name, Consumer<Double> setter) {
+        this(name, null, setter);
     }
 
     @Override
-    protected final void updateValue(double newValue) {
-        if (m_value != newValue) {
-            m_value = newValue;
-            if (this.consumer != null) this.consumer.accept(newValue);
-        }
+    protected void updateValue(double newValue) {
+        if (this.getter != null && this.getter.get() != newValue && this.setter != null)
+            this.setter.accept(newValue);
+        else if (this.setter != null)
+            this.setter.accept(newValue);
     }
 }
